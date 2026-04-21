@@ -29,181 +29,203 @@
       --info-bg: #042c53; --info-text: #b5d4f4;
     }
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; overflow-x: hidden; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; }
   .screen { display: none; min-height: 100vh; padding: 2rem 1rem; }
-  .screen.active { display: block; animation: fadeIn 0.3s ease; }
-  
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+  .screen.active { display: block; }
   .center-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; transition: all 0.3s ease; }
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
   .col { display: flex; flex-direction: column; gap: 10px; }
   .row { display: flex; gap: 10px; align-items: center; }
-
   input[type="text"], input[type="password"] {
     font-family: inherit; font-size: 14px; color: var(--text); background: var(--surface);
-    border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 12px; width: 100%; outline: none; transition: border 0.2s;
+    border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; width: 100%; outline: none;
   }
   input:focus { border-color: var(--text2); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
-
   button {
     font-family: inherit; font-size: 14px; cursor: pointer; border-radius: var(--radius);
-    padding: 10px 16px; border: 0.5px solid var(--border2); background: transparent;
-    color: var(--text); white-space: nowrap; transition: all 0.2s;
+    padding: 9px 16px; border: 0.5px solid var(--border2); background: transparent;
+    color: var(--text); white-space: nowrap; transition: background 0.12s;
   }
   button:hover { background: var(--surface2); }
-  button:active { transform: scale(0.96); }
+  button:active { transform: scale(0.98); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 500; }
-  button.primary:hover { opacity: 0.9; }
-
-  /* Animated Success Elements */
-  #ci-success { animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  @keyframes cardPop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-  .success-icon { 
-    width: 64px; height: 64px; border-radius: 50%; background: var(--success-bg); color: var(--success-text); 
-    display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;
-    animation: iconScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.5);
-  }
-  @keyframes iconScale { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-
-  /* Rest of UI components */
+  button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  button.primary:hover { opacity: 0.85; background: var(--accent); }
+  button.danger { color: var(--danger-text); }
+  button.danger:hover { background: var(--danger-bg); }
   label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 3px; }
-  h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  h1 { font-size: 22px; font-weight: 600; }
+  h3 { font-size: 15px; font-weight: 600; }
   hr { border: none; border-top: 0.5px solid var(--border); margin: 0.75rem 0; }
   .stat { background: var(--surface2); border-radius: var(--radius); padding: 1rem; text-align: center; flex: 1; }
   .stat-num { font-size: 26px; font-weight: 600; }
-  .stat-lbl { font-size: 12px; color: var(--text2); }
-  
+  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  td { padding: 10px 8px; border-bottom: 0.5px solid var(--border); }
-  .badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  th { text-align: left; font-size: 12px; font-weight: 500; color: var(--text2); padding: 6px 8px; border-bottom: 0.5px solid var(--border); }
+  td { padding: 9px 8px; border-bottom: 0.5px solid var(--border); }
+  .empty { text-align: center; color: var(--text3); padding: 2rem; font-size: 14px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 500; }
   .badge-late { background: var(--warning-bg); color: var(--warning-text); }
   .badge-ontime { background: var(--success-bg); color: var(--success-text); }
-
-  .spinner { 
-    display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border2); 
-    border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; 
-  }
+  .past-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid var(--border); gap: 8px; flex-wrap: wrap; }
+  .past-row:last-child { border-bottom: none; }
+  .msg-success { font-size: 13px; color: var(--success-text); }
+  .msg-error { font-size: 13px; color: var(--danger-text); }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  #ci-roster button {
-    display: block; width: 100%; text-align: left; padding: 14px 12px; 
-    border: none; border-bottom: 0.5px solid var(--border); border-radius: 0;
-    background: transparent; color: var(--text); transition: background 0.2s;
-  }
-  #ci-roster button:hover { background: var(--surface2); }
+  .success-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--success-bg); color: var(--success-text); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
 </style>
 </head>
 <body>
 
+<!-- LOCK -->
 <div id="screen-lock" class="screen active">
   <div class="center-wrap">
     <div style="width:100%;max-width:340px" class="col">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <h1>Key Club</h1>
-        <div style="font-size:14px;color:var(--text2)">Officer Portal</div>
+      <div style="text-align:center;margin-bottom:1.25rem">
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.5px">Key Club</div>
+        <div style="font-size:14px;color:var(--text2);margin-top:4px">Attendance System</div>
       </div>
       <div class="card col">
-        <label>Admin Password</label>
-        <input type="password" id="pw-input" placeholder="••••••••" />
+        <label>Admin password</label>
+        <input type="password" id="pw-input" placeholder="Enter password" />
         <button class="primary" id="login-btn" onclick="tryLogin()">Sign in</button>
-        <div id="pw-err" style="display:none; color:var(--danger-text); font-size:13px">Incorrect password.</div>
+        <div id="pw-err" class="msg-error" style="display:none">Incorrect password.</div>
       </div>
+      <div style="font-size:12px;color:var(--text3);text-align:center;margin-top:10px">Member check-in is via QR code only</div>
     </div>
   </div>
 </div>
 
+<!-- ADMIN -->
 <div id="screen-admin" class="screen">
   <div style="max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem">
-    <div class="row" style="justify-content:space-between">
-      <h1>Dashboard</h1>
-      <div class="row">
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <h1>Key Club Attendance</h1>
+      <div class="row" style="gap:8px">
         <button onclick="showScreen('settings')">Settings</button>
         <button onclick="logout()">Sign out</button>
       </div>
     </div>
 
     <div class="card col">
-      <h3>Create Event</h3>
-      <div class="row">
-        <input id="evt-name" type="text" placeholder="e.g. Meeting #15" />
-        <button class="primary" id="create-btn" onclick="newEvent()">Start Event</button>
+      <h3>Create new event</h3>
+      <hr>
+      <div class="row" style="flex-wrap:wrap;gap:10px">
+        <div class="col" style="flex:1;min-width:200px">
+          <label>Event name</label>
+          <input id="evt-name" type="text" placeholder="e.g. Weekly Meeting #12" />
+        </div>
+        <div class="col" style="justify-content:flex-end">
+          <label style="visibility:hidden">x</label>
+          <button class="primary" id="create-btn" onclick="newEvent()">Generate QR code</button>
+        </div>
       </div>
     </div>
 
     <div id="active-event-card" class="card col" style="display:none">
-      <div class="row" style="justify-content:space-between">
-        <h3 id="active-evt-name"></h3>
-        <button class="danger" onclick="endEvent()" style="color:var(--danger-text)">End Event</button>
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <h3 id="active-evt-name"></h3>
+          <div style="font-size:13px;color:var(--text2);margin-top:2px" id="active-evt-date"></div>
+        </div>
+        <div class="row" style="gap:8px">
+          <button onclick="exportCSV()">Export CSV</button>
+          <button class="danger" onclick="endEvent()">Close event</button>
+        </div>
       </div>
       <hr>
-      <div class="row" style="align-items:flex-start; gap:20px">
-        <div style="text-align:center">
-          <div id="qr-container" style="background:white; padding:10px; border-radius:8px"></div>
-          <button onclick="copyCheckinLink()" style="margin-top:10px; font-size:12px">Copy Link</button>
-          <input id="checkin-link" type="text" readonly style="position:absolute; left:-9999px">
-        </div>
-        <div class="col" style="flex:1">
-          <div class="row">
-            <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Present</div></div>
-            <div class="stat"><div class="stat-num" id="stat-late">0</div><div class="stat-lbl">Late</div></div>
-          </div>
-          <div style="max-height:300px; overflow-y:auto; border:0.5px solid var(--border); border-radius:8px">
-            <table><tbody id="attendance-table"></tbody></table>
+      <div class="row" style="gap:1.5rem;flex-wrap:wrap;align-items:flex-start">
+        <div class="col" style="flex:0 0 auto;align-items:center">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px;align-self:flex-start">Scan to check in</div>
+          <div id="qr-container" style="background:white;padding:10px;border-radius:var(--radius);border:0.5px solid var(--border)"></div>
+          <div style="font-size:11px;color:var(--text3);margin-top:8px">or share this link:</div>
+          <div style="display:flex;gap:6px;width:100%;margin-top:4px">
+            <input id="checkin-link" type="text" readonly style="font-size:11px;flex:1" />
+            <button onclick="copyCheckinLink()" style="font-size:12px;padding:6px 10px">Copy</button>
           </div>
         </div>
+        <div class="col" style="flex:1;min-width:240px">
+          <div class="row" style="gap:10px">
+            <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">checked in</div></div>
+            <div class="stat"><div class="stat-num" id="stat-late">0</div><div class="stat-lbl">late</div></div>
+          </div>
+          <div style="max-height:280px;overflow-y:auto;border:0.5px solid var(--border);border-radius:var(--radius)">
+            <table>
+              <thead><tr><th>Name</th><th>Time</th><th>Status</th></tr></thead>
+              <tbody id="attendance-table"><tr><td colspan="3" class="empty">Waiting for check-ins...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card col">
+      <h3>Past events</h3>
+      <hr>
+      <div id="past-events-list"><div class="empty">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen">
+  <div style="max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem">
+    <div class="row">
+      <button onclick="showScreen('admin')" style="margin-right:4px">← Back</button>
+      <h1>Settings</h1>
+    </div>
+    <div class="card col">
+      <h3>Admin password</h3>
+      <hr>
+      <label>New password</label>
+      <input type="password" id="new-pw" placeholder="Enter new password" />
+      <label>Confirm password</label>
+      <input type="password" id="confirm-pw" placeholder="Confirm new password" />
+      <button class="primary" style="align-self:flex-start" onclick="changePassword()">Update password</button>
+      <div id="pw-change-msg" style="display:none"></div>
+    </div>
+    <div class="card col">
+      <h3>Member roster</h3>
+      <hr>
+      <div style="font-size:13px;color:var(--text2)">To update the roster, upload a new <strong>roster.txt</strong> file (one name per line) to your GitHub repo. Changes take effect immediately for all check-ins.</div>
+      <div id="roster-status" style="font-size:13px;color:var(--text2);padding:10px 12px;background:var(--surface2);border-radius:var(--radius)">
+        <span class="spinner"></span> Checking roster...
       </div>
     </div>
   </div>
 </div>
 
+<!-- CHECK-IN -->
 <div id="screen-checkin" class="screen">
   <div style="max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:1rem">
-    <div style="text-align:center; padding: 1rem 0">
-      <h1 id="ci-evt-name">Key Club</h1>
-      <div id="ci-evt-date" style="color:var(--text2); font-size:13px"></div>
+    <div style="text-align:center;padding-top:0.5rem">
+      <div style="font-size:20px;font-weight:700" id="ci-evt-name">Key Club</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:3px" id="ci-evt-date"></div>
     </div>
-
-    <div id="ci-loading" style="text-align:center; padding:2rem"><span class="spinner"></span></div>
-
+    <div id="ci-loading" style="text-align:center;padding:2rem;color:var(--text2);font-size:14px">
+      <span class="spinner"></span> Loading...
+    </div>
     <div class="card col" id="ci-form" style="display:none">
-      <label>Find your name</label>
-      <input id="ci-search" type="text" placeholder="Start typing..." oninput="filterRoster()" autocomplete="off" />
-      <div id="ci-roster" style="max-height:250px; overflow-y:auto; border:0.5px solid var(--border); border-radius:8px"></div>
-      
-      <div id="ci-selected" style="display:none; padding:12px; background:var(--info-bg); color:var(--info-text); border-radius:8px; font-weight:600"></div>
-      
-      <label style="display:flex; align-items:center; gap:8px; margin-top:10px">
-        <input type="checkbox" id="ci-late" style="width:auto"> I am arriving late
+      <label style="font-size:14px;color:var(--text);font-weight:500">Find your name</label>
+      <input id="ci-search" type="text" placeholder="Start typing your name..." oninput="filterRoster()" autocomplete="off" />
+      <div id="ci-roster" style="border:0.5px solid var(--border);border-radius:var(--radius);max-height:260px;overflow-y:auto;"></div>
+      <div id="ci-selected" style="display:none;padding:10px 12px;background:var(--info-bg);color:var(--info-text);border-radius:var(--radius);font-size:14px;font-weight:500"></div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--text);margin:4px 0 0">
+        <input type="checkbox" id="ci-late" style="width:auto;margin:0" /> I'm arriving late
       </label>
-      
-      <button class="primary" id="ci-submit" onclick="submitCheckin()" disabled>Check In</button>
-      <div id="ci-err" style="color:var(--danger-text); font-size:13px; display:none"></div>
+      <button class="primary" id="ci-submit" onclick="submitCheckin()" disabled>Check in</button>
+      <div id="ci-err" class="msg-error" style="display:none"></div>
     </div>
-
-    <div id="ci-success" class="card" style="display:none; text-align:center; padding:3rem 1rem">
+    <div id="ci-success" class="card" style="display:none;text-align:center;padding:2rem">
       <div class="success-icon">✓</div>
-      <h2 id="ci-success-name"></h2>
-      <p style="color:var(--text2)">You're all checked in!</p>
+      <div style="font-size:18px;font-weight:600" id="ci-success-name"></div>
+      <div style="font-size:14px;color:var(--text2);margin-top:6px">You're checked in!</div>
     </div>
-
-    <div id="ci-closed" class="card" style="display:none; text-align:center; padding:3rem 1rem">
-      <div style="font-size:40px; margin-bottom:10px">🔒</div>
-      <h3>Check-in Closed</h3>
-      <p style="color:var(--text2)">This event is no longer active.</p>
-    </div>
-  </div>
-</div>
-
-<div id="screen-settings" class="screen">
-  <div style="max-width:500px;margin:0 auto" class="col">
-    <button onclick="showScreen('admin')" style="align-self:flex-start">← Back</button>
-    <h1>Settings</h1>
-    <div class="card col">
-      <label>GitHub Roster URL (txt)</label>
-      <div id="roster-status" style="font-size:12px; color:var(--text2)">Checking roster...</div>
+    <div id="ci-closed" class="card" style="display:none;text-align:center;padding:2rem">
+      <div style="font-size:32px;margin-bottom:12px">🔒</div>
+      <div style="font-size:16px;font-weight:600">Check-in is closed</div>
+      <div style="font-size:14px;color:var(--text2);margin-top:6px">This event is no longer accepting check-ins.</div>
     </div>
   </div>
 </div>
@@ -228,9 +250,12 @@ async function loadRoster() {
   try {
     const res = await fetch(ROSTER_URL + '?_t=' + Date.now());
     const text = await res.text();
-    roster = text.split('\n').map(l => l.trim()).filter(Boolean);
+    roster = text.split('\n').map(l => l.split(',')[0].replace(/["'\r]/g,'').trim()).filter(Boolean);
     return roster;
-  } catch(e) { return []; }
+  } catch(e) {
+    roster = [];
+    return [];
+  }
 }
 
 function showScreen(name) {
@@ -238,57 +263,114 @@ function showScreen(name) {
   document.getElementById('screen-' + name).classList.add('active');
 }
 
+async function routeByURL() {
+  const params = new URLSearchParams(window.location.search);
+  const checkinId = params.get('checkin');
+  if (checkinId) {
+    activeCheckinId = checkinId;
+    showScreen('checkin');
+    loadCheckinScreen(checkinId);
+  } else {
+    showScreen('lock');
+  }
+}
+
 async function tryLogin() {
   const pw = document.getElementById('pw-input').value;
   const btn = document.getElementById('login-btn');
   btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Signing in...';
   try {
     const res = await api({ action: 'verifyPassword', password: pw });
     if (res.valid) {
+      document.getElementById('pw-err').style.display = 'none';
       showScreen('admin');
+      renderPastEvents();
       loadRosterStatus();
     } else {
       document.getElementById('pw-err').style.display = 'block';
     }
-  } catch(e) { alert("Network error."); }
+  } catch(e) {
+    document.getElementById('pw-err').textContent = 'Connection error. Try again.';
+    document.getElementById('pw-err').style.display = 'block';
+  }
   btn.disabled = false;
+  btn.innerHTML = 'Sign in';
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+function logout() {
+  activeEvent = null;
+  clearInterval(pollTimer);
+  document.getElementById('active-event-card').style.display = 'none';
+  showScreen('lock');
+  document.getElementById('pw-input').value = '';
 }
 
-function logout() { showScreen('lock'); document.getElementById('pw-input').value = ''; }
+async function changePassword() {
+  const np = document.getElementById('new-pw').value;
+  const cp = document.getElementById('confirm-pw').value;
+  const msg = document.getElementById('pw-change-msg');
+  msg.style.display = 'block';
+  if (!np) { msg.className = 'msg-error'; msg.textContent = 'Enter a new password.'; return; }
+  if (np !== cp) { msg.className = 'msg-error'; msg.textContent = 'Passwords do not match.'; return; }
+  await api({ action: 'setPassword', password: np });
+  msg.className = 'msg-success'; msg.textContent = 'Password updated.';
+  document.getElementById('new-pw').value = '';
+  document.getElementById('confirm-pw').value = '';
+}
 
 async function loadRosterStatus() {
+  const el = document.getElementById('roster-status');
   const names = await loadRoster();
-  document.getElementById('roster-status').textContent = names.length + ' members found in roster.txt';
+  el.innerHTML = names.length === 0
+    ? 'No roster found. Upload roster.txt to your GitHub repo.'
+    : names.length + ' members loaded from roster.txt';
 }
 
 async function newEvent() {
   const name = document.getElementById('evt-name').value.trim();
-  if (!name) return;
+  if (!name) { alert('Please enter an event name.'); return; }
   const btn = document.getElementById('create-btn');
   btn.disabled = true;
-  const res = await api({ action: 'createEvent', name, date: new Date().toLocaleString() });
-  activeEvent = { ...res.event, attendees: [] };
-  renderActiveEvent();
-  pollTimer = setInterval(pollAttendance, 4000);
+  btn.innerHTML = '<span class="spinner"></span> Creating...';
+  try {
+    const res = await api({ action: 'createEvent', name, date: new Date().toLocaleString() });
+    activeEvent = { ...res.event, attendees: [] };
+    renderActiveEvent();
+    document.getElementById('evt-name').value = '';
+    clearInterval(pollTimer);
+    pollTimer = setInterval(pollAttendance, 4000);
+  } catch(e) { alert('Error creating event. Check your connection.'); }
   btn.disabled = false;
+  btn.innerHTML = 'Generate QR code';
 }
 
 function renderActiveEvent() {
-  document.getElementById('active-event-card').style.display = 'block';
+  document.getElementById('active-event-card').style.display = 'flex';
   document.getElementById('active-evt-name').textContent = activeEvent.name;
+  document.getElementById('active-evt-date').textContent = activeEvent.date;
   const link = window.location.origin + window.location.pathname + '?checkin=' + activeEvent.id;
   document.getElementById('checkin-link').value = link;
-  document.getElementById('qr-container').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(link)}" style="width:180px">`;
+  const qrDiv = document.getElementById('qr-container');
+  qrDiv.innerHTML = '';
+  const img = document.createElement('img');
+  img.style.cssText = 'width:180px;height:180px;display:block;';
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(link) + '&margin=2';
+  img.alt = 'QR Code';
+  qrDiv.appendChild(img);
   updateAttendanceTable();
 }
 
 async function pollAttendance() {
   if (!activeEvent) return;
-  const res = await api({ action: 'getEventAttendees', id: activeEvent.id });
-  if (res.attendees && res.attendees.length !== activeEvent.attendees.length) {
-    activeEvent.attendees = res.attendees;
-    updateAttendanceTable();
-  }
+  try {
+    const res = await api({ action: 'getEventAttendees', id: activeEvent.id });
+    if (res.attendees && res.attendees.length !== activeEvent.attendees.length) {
+      activeEvent.attendees = res.attendees;
+      updateAttendanceTable();
+    }
+  } catch(e) {}
 }
 
 function updateAttendanceTable() {
@@ -296,101 +378,159 @@ function updateAttendanceTable() {
   document.getElementById('stat-total').textContent = atts.length;
   document.getElementById('stat-late').textContent = atts.filter(a => a.late).length;
   const tbody = document.getElementById('attendance-table');
+  if (atts.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="empty">Waiting for check-ins...</td></tr>'; return; }
   tbody.innerHTML = atts.slice().reverse().map(a => `
-    <tr><td>${a.name}</td><td style="text-align:right"><span class="badge ${a.late ? 'badge-late' : 'badge-ontime'}">${a.late ? 'Late' : 'On Time'}</span></td></tr>
+    <tr>
+      <td>${esc(a.name)}</td>
+      <td style="color:var(--text2);font-size:12px">${a.time}</td>
+      <td><span class="badge ${a.late ? 'badge-late' : 'badge-ontime'}">${a.late ? 'Late' : 'On time'}</span></td>
+    </tr>
   `).join('');
 }
 
 async function endEvent() {
-  if (!confirm("Close check-in?")) return;
+  if (!activeEvent) return;
+  if (!confirm('Close this event? Members will no longer be able to check in.')) return;
   await api({ action: 'closeEvent', id: activeEvent.id });
-  activeEvent = null;
   clearInterval(pollTimer);
+  activeEvent = null;
   document.getElementById('active-event-card').style.display = 'none';
+  renderPastEvents();
 }
 
-// CHECK-IN LOGIC
+async function renderPastEvents() {
+  const container = document.getElementById('past-events-list');
+  container.innerHTML = '<div class="empty"><span class="spinner"></span> Loading...</div>';
+  try {
+    const res = await api({ action: 'listEvents' });
+    const events = (res.events || []).filter(e => !e.open);
+    if (events.length === 0) { container.innerHTML = '<div class="empty">No past events yet</div>'; return; }
+    container.innerHTML = events.map(ev => `
+      <div class="past-row">
+        <div>
+          <div style="font-size:14px;font-weight:500">${esc(ev.name)}</div>
+          <div style="font-size:12px;color:var(--text2)">${ev.date} &middot; ${ev.attendeeCount} attendee${ev.attendeeCount !== 1 ? 's' : ''}</div>
+        </div>
+        <button onclick="exportCSVById('${ev.id}')">Export CSV</button>
+      </div>
+    `).join('');
+  } catch(e) { container.innerHTML = '<div class="empty">Error loading events.</div>'; }
+}
+
+async function exportCSV() {
+  if (!activeEvent) return;
+  const res = await api({ action: 'getEvent', id: activeEvent.id });
+  if (res.event) doExport(res.event);
+}
+async function exportCSVById(id) {
+  const res = await api({ action: 'getEvent', id });
+  if (res.event) doExport(res.event);
+}
+function doExport(ev) {
+  const rows = [['Name','Event','Late','Check-in Time']];
+  (ev.attendees||[]).forEach(a => rows.push([
+    '"'+String(a.name).replace(/"/g,'""')+'"',
+    '"'+String(ev.name).replace(/"/g,'""')+'"',
+    a.late?'Yes':'No', a.time
+  ]));
+  const blob = new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=String(ev.name||'attendance').replace(/[^a-z0-9]/gi,'_')+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
 async function loadCheckinScreen(id) {
-  const [evRes] = await Promise.all([api({ action: 'getEvent', id }), loadRoster()]);
-  document.getElementById('ci-loading').style.display = 'none';
-  if (!evRes.event || !evRes.event.open) {
-    document.getElementById('ci-closed').style.display = 'block';
-  } else {
-    document.getElementById('ci-evt-name').textContent = evRes.event.name;
+  document.getElementById('ci-loading').style.display = 'block';
+  document.getElementById('ci-form').style.display = 'none';
+  document.getElementById('ci-closed').style.display = 'none';
+  try {
+    const [evRes] = await Promise.all([
+      api({ action: 'getEvent', id }),
+      loadRoster()
+    ]);
+    document.getElementById('ci-loading').style.display = 'none';
+    if (evRes.error === 'not_found') { document.getElementById('ci-closed').style.display = 'block'; return; }
+    const ev = evRes.event;
+    document.getElementById('ci-evt-name').textContent = ev.name;
+    document.getElementById('ci-evt-date').textContent = ev.date;
+    if (!ev.open) { document.getElementById('ci-closed').style.display = 'block'; return; }
     document.getElementById('ci-form').style.display = 'flex';
     filterRoster();
+  } catch(e) {
+    document.getElementById('ci-loading').innerHTML = '<div class="msg-error">Connection error. Please try again.</div>';
   }
 }
 
 function filterRoster() {
-  const q = document.getElementById('ci-search').value.toLowerCase();
+  const q = (document.getElementById('ci-search').value || '').toLowerCase().trim();
+  const matches = q.length === 0 ? roster.slice(0,25) : roster.filter(n => n.toLowerCase().includes(q)).slice(0,25);
   const container = document.getElementById('ci-roster');
-  const matches = roster.filter(n => n.toLowerCase().includes(q)).slice(0, 10);
-  container.innerHTML = matches.map(n => `<button onclick="selectMember('${n}')">${n}</button>`).join('');
+  if (roster.length === 0) { container.innerHTML = '<div class="empty">Roster not loaded. Contact your officer.</div>'; return; }
+  if (matches.length === 0) { container.innerHTML = '<div class="empty">No matches found</div>'; return; }
+  container.innerHTML = '';
+  matches.forEach(n => {
+    const btn = document.createElement('button');
+    btn.textContent = n;
+    btn.style.cssText = 'display:block;width:100%;text-align:left;padding:14px 12px;border:none;border-bottom:0.5px solid var(--border);border-radius:0;background:' + (selectedMember === n ? 'var(--surface2)' : 'transparent') + ';font-size:15px;font-weight:' + (selectedMember === n ? '600' : '400') + ';cursor:pointer;color:var(--text);-webkit-tap-highlight-color:rgba(0,0,0,0.1);';
+    btn.addEventListener('touchend', (e) => { e.preventDefault(); selectMember(n); });
+    btn.addEventListener('click', () => selectMember(n));
+    container.appendChild(btn);
+  });
 }
 
 function selectMember(name) {
   selectedMember = name;
-  document.getElementById('ci-selected').textContent = name;
   document.getElementById('ci-selected').style.display = 'block';
+  document.getElementById('ci-selected').textContent = name + ' selected';
   document.getElementById('ci-submit').disabled = false;
+  document.getElementById('ci-err').style.display = 'none';
+  document.getElementById('ci-search').value = name;
   document.getElementById('ci-roster').innerHTML = '';
 }
 
 async function submitCheckin() {
+  if (!selectedMember || !activeCheckinId) return;
   const btn = document.getElementById('ci-submit');
   btn.disabled = true;
-  const res = await api({
-    action: 'checkin', eventId: activeCheckinId, name: selectedMember,
-    late: document.getElementById('ci-late').checked,
-    time: new Date().toLocaleTimeString()
-  });
-  if (res.success) {
-    document.getElementById('ci-form').style.display = 'none';
-    document.getElementById('ci-success-name').textContent = selectedMember;
-    document.getElementById('ci-success').style.display = 'block';
-    fireConfetti();
-  } else {
-    alert(res.error || "Error");
-    btn.disabled = false;
-  }
-}
-
-function fireConfetti() {
-  const canvas = document.createElement('canvas');
-  Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 999 });
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  let particles = Array.from({ length: 80 }, () => ({
-    x: Math.random() * canvas.width, y: -20,
-    r: Math.random() * 6 + 4, d: Math.random() * 5 + 2,
-    color: ['#3b6d11', '#185fa5', '#fac775', '#f09595'][Math.floor(Math.random() * 4)],
-    tilt: Math.random() * 10
-  }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      ctx.fillStyle = p.color;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
-      p.y += p.d; p.x += Math.sin(p.tilt);
+  btn.innerHTML = '<span class="spinner"></span> Checking in...';
+  try {
+    const res = await api({
+      action: 'checkin', eventId: activeCheckinId, name: selectedMember,
+      late: document.getElementById('ci-late').checked,
+      time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
     });
-    particles = particles.filter(p => p.y < canvas.height);
-    if (particles.length) requestAnimationFrame(draw);
-    else canvas.remove();
+    if (res.success) {
+      document.getElementById('ci-form').style.display = 'none';
+      document.getElementById('ci-success').style.display = 'block';
+      document.getElementById('ci-success-name').textContent = selectedMember;
+    } else if (res.error === 'already_checked_in') {
+      document.getElementById('ci-err').style.display = 'block';
+      document.getElementById('ci-err').textContent = "You've already checked in!";
+      btn.disabled = false; btn.innerHTML = 'Check in';
+    } else if (res.error === 'closed') {
+      document.getElementById('ci-form').style.display = 'none';
+      document.getElementById('ci-closed').style.display = 'block';
+    } else {
+      document.getElementById('ci-err').style.display = 'block';
+      document.getElementById('ci-err').textContent = 'Something went wrong. Try again.';
+      btn.disabled = false; btn.innerHTML = 'Check in';
+    }
+  } catch(e) {
+    document.getElementById('ci-err').style.display = 'block';
+    document.getElementById('ci-err').textContent = 'Connection error. Try again.';
+    btn.disabled = false; btn.innerHTML = 'Check in';
   }
-  draw();
 }
 
-function copyCheckinLink() { navigator.clipboard.writeText(document.getElementById('checkin-link').value); alert("Link copied!"); }
-
-// ROUTING
-const params = new URLSearchParams(window.location.search);
-if (params.get('checkin')) {
-  activeCheckinId = params.get('checkin');
-  showScreen('checkin');
-  loadCheckinScreen(activeCheckinId);
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function copyCheckinLink() {
+  const el = document.getElementById('checkin-link'); el.select(); document.execCommand('copy');
+}
+
+routeByURL();
 </script>
 </body>
 </html>
