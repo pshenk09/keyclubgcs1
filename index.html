@@ -610,6 +610,14 @@ async function submitCheckin() {
     document.getElementById('ci-err').textContent = 'Connection error. Try again.';
     btn.disabled = false; btn.innerHTML = 'Check in';
   }
+ if (res.success) {
+      document.getElementById('ci-form').style.display = 'none';
+      document.getElementById('ci-success').style.display = 'block';
+      document.getElementById('ci-success-name').textContent = selectedMember;
+      
+      // FIRE THE CONFETTI
+      fireConfetti(); 
+    }
 }
 
 function esc(str) {
