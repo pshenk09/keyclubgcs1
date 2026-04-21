@@ -5,6 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Key Club Attendance</title>
 <style>
+ /* Pop-in animation for the success card */
+#ci-success {
+  animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cardPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Animated Checkmark */
+.success-icon {
+  width: 80px; height: 80px;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 40px;
+  animation: circleScale 0.5s ease-out;
+}
+
+@keyframes circleScale {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Skeleton Loading Animation for the Roster */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  height: 40px; margin: 10px; border-radius: 4px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #f5f4f0; --surface: #ffffff; --surface2: #f0efe9;
@@ -231,6 +271,55 @@
 </div>
 
 <script>
+ function fireConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0'; canvas.style.left = '0';
+  canvas.style.width = '100%'; canvas.style.height = '100%';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '9999';
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let pieces = [];
+  const colors = ['#3b6d11', '#185fa5', '#fac775', '#f09595'];
+
+  for (let i = 0; i < 100; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      rotation: Math.random() * 360,
+      speed: Math.random() * 5 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: Math.random() * 8 + 4
+    });
+  }
+
+  function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.rotation += p.speed;
+      ctx.fillStyle = p.color;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation * Math.PI / 180);
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+      ctx.restore();
+    });
+    
+    pieces = pieces.filter(p => p.y < canvas.height);
+    if (pieces.length > 0) {
+      requestAnimationFrame(update);
+    } else {
+      document.body.removeChild(canvas);
+    }
+  }
+  update();
+}
 const API = 'https://script.google.com/macros/s/AKfycbyHsjkhprZqpPaNEId3zF2kqOKfgDXmRQ1glwW56RJ-g13QW9h8yl6eUKAJG_-3sOkFnw/exec';
 const ROSTER_URL = 'https://raw.githubusercontent.com/llama923/keyclub-attendance/main/roster.txt';
 
