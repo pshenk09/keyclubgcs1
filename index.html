@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Key Club Attendance</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f4f0; --surface: #ffffff; --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18; --text2: #5f5e5a; --text3: #9a9890;
+    --accent: #1a1a18; --accent-fg: #ffffff;
+    --success-bg: #eaf3de; --success-text: #3b6d11;
+    --warning-bg: #faeeda; --warning-text: #854f0b;
+    --danger-text: #a32d2d; --danger-bg: #fcebeb;
+    --info-bg: #e6f1fb; --info-text: #185fa5;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --surface: #252523; --surface2: #2e2e2b;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
+      --text: #f0efe9; --text2: #a8a7a0; --text3: #666560;
+      --accent: #f0efe9; --accent-fg: #1a1a18;
+      --success-bg: #173404; --success-text: #c0dd97;
+      --warning-bg: #412402; --warning-text: #fac775;
+      --danger-text: #f09595; --danger-bg: #501313;
+      --info-bg: #042c53; --info-text: #b5d4f4;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; overflow-x: hidden; }
+  .screen { display: none; min-height: 100vh; padding: 2rem 1rem; }
+  .screen.active { display: block; animation: fadeIn 0.3s ease; }
+  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .center-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; transition: all 0.3s ease; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+
+  input[type="text"], input[type="password"] {
+    font-family: inherit; font-size: 14px; color: var(--text); background: var(--surface);
+    border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 12px; width: 100%; outline: none; transition: border 0.2s;
+  }
+  input:focus { border-color: var(--text2); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+
+  button {
+    font-family: inherit; font-size: 14px; cursor: pointer; border-radius: var(--radius);
+    padding: 10px 16px; border: 0.5px solid var(--border2); background: transparent;
+    color: var(--text); white-space: nowrap; transition: all 0.2s;
+  }
+  button:hover { background: var(--surface2); }
+  button:active { transform: scale(0.96); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 500; }
+  button.primary:hover { opacity: 0.9; }
+
+  /* Animated Success Elements */
+  #ci-success { animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes cardPop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  .success-icon { 
+    width: 64px; height: 64px; border-radius: 50%; background: var(--success-bg); color: var(--success-text); 
+    display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;
+    animation: iconScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+  }
+  @keyframes iconScale { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+  /* Rest of UI components */
+  label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 3px; }
+  h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  hr { border: none; border-top: 0.5px solid var(--border); margin: 0.75rem 0; }
+  .stat { background: var(--surface2); border-radius: var(--radius); padding: 1rem; text-align: center; flex: 1; }
+  .stat-num { font-size: 26px; font-weight: 600; }
+  .stat-lbl { font-size: 12px; color: var(--text2); }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 10px 8px; border-bottom: 0.5px solid var(--border); }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+  .badge-late { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-ontime { background: var(--success-bg); color: var(--success-text); }
+
+  .spinner { 
+    display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border2); 
+    border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; 
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #ci-roster button {
+    display: block; width: 100%; text-align: left; padding: 14px 12px; 
+    border: none; border-bottom: 0.5px solid var(--border); border-radius: 0;
+    background: transparent; color: var(--text); transition: background 0.2s;
+  }
+  #ci-roster button:hover { background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<div id="screen-lock" class="screen active">
+  <div class="center-wrap">
+    <div style="width:100%;max-width:340px" class="col">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <h1>Key Club</h1>
+        <div style="font-size:14px;color:var(--text2)">Officer Portal</div>
+      </div>
+      <div class="card col">
+        <label>Admin Password</label>
+        <input type="password" id="pw-input" placeholder="••••••••" />
+        <button class="primary" id="login-btn" onclick="tryLogin()">Sign in</button>
+        <div id="pw-err" style="display:none; color:var(--danger-text); font-size:13px">Incorrect password.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-admin" class="screen">
+  <div style="max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem">
+    <div class="row" style="justify-content:space-between">
+      <h1>Dashboard</h1>
+      <div class="row">
+        <button onclick="showScreen('settings')">Settings</button>
+        <button onclick="logout()">Sign out</button>
+      </div>
+    </div>
+
+    <div class="card col">
+      <h3>Create Event</h3>
+      <div class="row">
+        <input id="evt-name" type="text" placeholder="e.g. Meeting #15" />
+        <button class="primary" id="create-btn" onclick="newEvent()">Start Event</button>
+      </div>
+    </div>
+
+    <div id="active-event-card" class="card col" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <h3 id="active-evt-name"></h3>
+        <button class="danger" onclick="endEvent()" style="color:var(--danger-text)">End Event</button>
+      </div>
+      <hr>
+      <div class="row" style="align-items:flex-start; gap:20px">
+        <div style="text-align:center">
+          <div id="qr-container" style="background:white; padding:10px; border-radius:8px"></div>
+          <button onclick="copyCheckinLink()" style="margin-top:10px; font-size:12px">Copy Link</button>
+          <input id="checkin-link" type="text" readonly style="position:absolute; left:-9999px">
+        </div>
+        <div class="col" style="flex:1">
+          <div class="row">
+            <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Present</div></div>
+            <div class="stat"><div class="stat-num" id="stat-late">0</div><div class="stat-lbl">Late</div></div>
+          </div>
+          <div style="max-height:300px; overflow-y:auto; border:0.5px solid var(--border); border-radius:8px">
+            <table><tbody id="attendance-table"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-checkin" class="screen">
+  <div style="max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:1rem">
+    <div style="text-align:center; padding: 1rem 0">
+      <h1 id="ci-evt-name">Key Club</h1>
+      <div id="ci-evt-date" style="color:var(--text2); font-size:13px"></div>
+    </div>
+
+    <div id="ci-loading" style="text-align:center; padding:2rem"><span class="spinner"></span></div>
+
+    <div class="card col" id="ci-form" style="display:none">
+      <label>Find your name</label>
+      <input id="ci-search" type="text" placeholder="Start typing..." oninput="filterRoster()" autocomplete="off" />
+      <div id="ci-roster" style="max-height:250px; overflow-y:auto; border:0.5px solid var(--border); border-radius:8px"></div>
+      
+      <div id="ci-selected" style="display:none; padding:12px; background:var(--info-bg); color:var(--info-text); border-radius:8px; font-weight:600"></div>
+      
+      <label style="display:flex; align-items:center; gap:8px; margin-top:10px">
+        <input type="checkbox" id="ci-late" style="width:auto"> I am arriving late
+      </label>
+      
+      <button class="primary" id="ci-submit" onclick="submitCheckin()" disabled>Check In</button>
+      <div id="ci-err" style="color:var(--danger-text); font-size:13px; display:none"></div>
+    </div>
+
+    <div id="ci-success" class="card" style="display:none; text-align:center; padding:3rem 1rem">
+      <div class="success-icon">✓</div>
+      <h2 id="ci-success-name"></h2>
+      <p style="color:var(--text2)">You're all checked in!</p>
+    </div>
+
+    <div id="ci-closed" class="card" style="display:none; text-align:center; padding:3rem 1rem">
+      <div style="font-size:40px; margin-bottom:10px">🔒</div>
+      <h3>Check-in Closed</h3>
+      <p style="color:var(--text2)">This event is no longer active.</p>
+    </div>
+  </div>
+</div>
+
+<div id="screen-settings" class="screen">
+  <div style="max-width:500px;margin:0 auto" class="col">
+    <button onclick="showScreen('admin')" style="align-self:flex-start">← Back</button>
+    <h1>Settings</h1>
+    <div class="card col">
+      <label>GitHub Roster URL (txt)</label>
+      <div id="roster-status" style="font-size:12px; color:var(--text2)">Checking roster...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyHsjkhprZqpPaNEId3zF2kqOKfgDXmRQ1glwW56RJ-g13QW9h8yl6eUKAJG_-3sOkFnw/exec';
+const ROSTER_URL = 'https://raw.githubusercontent.com/llama923/keyclub-attendance/main/roster.txt';
+
+let activeEvent = null;
+let pollTimer = null;
+let activeCheckinId = null;
+let selectedMember = null;
+let roster = [];
+
+async function api(params) {
+  const url = API + '?' + new URLSearchParams({ ...params, _t: Date.now() });
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function loadRoster() {
+  try {
+    const res = await fetch(ROSTER_URL + '?_t=' + Date.now());
+    const text = await res.text();
+    roster = text.split('\n').map(l => l.trim()).filter(Boolean);
+    return roster;
+  } catch(e) { return []; }
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+async function tryLogin() {
+  const pw = document.getElementById('pw-input').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  try {
+    const res = await api({ action: 'verifyPassword', password: pw });
+    if (res.valid) {
+      showScreen('admin');
+      loadRosterStatus();
+    } else {
+      document.getElementById('pw-err').style.display = 'block';
+    }
+  } catch(e) { alert("Network error."); }
+  btn.disabled = false;
+}
+
+function logout() { showScreen('lock'); document.getElementById('pw-input').value = ''; }
+
+async function loadRosterStatus() {
+  const names = await loadRoster();
+  document.getElementById('roster-status').textContent = names.length + ' members found in roster.txt';
+}
+
+async function newEvent() {
+  const name = document.getElementById('evt-name').value.trim();
+  if (!name) return;
+  const btn = document.getElementById('create-btn');
+  btn.disabled = true;
+  const res = await api({ action: 'createEvent', name, date: new Date().toLocaleString() });
+  activeEvent = { ...res.event, attendees: [] };
+  renderActiveEvent();
+  pollTimer = setInterval(pollAttendance, 4000);
+  btn.disabled = false;
+}
+
+function renderActiveEvent() {
+  document.getElementById('active-event-card').style.display = 'block';
+  document.getElementById('active-evt-name').textContent = activeEvent.name;
+  const link = window.location.origin + window.location.pathname + '?checkin=' + activeEvent.id;
+  document.getElementById('checkin-link').value = link;
+  document.getElementById('qr-container').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(link)}" style="width:180px">`;
+  updateAttendanceTable();
+}
+
+async function pollAttendance() {
+  if (!activeEvent) return;
+  const res = await api({ action: 'getEventAttendees', id: activeEvent.id });
+  if (res.attendees && res.attendees.length !== activeEvent.attendees.length) {
+    activeEvent.attendees = res.attendees;
+    updateAttendanceTable();
+  }
+}
+
+function updateAttendanceTable() {
+  const atts = activeEvent.attendees || [];
+  document.getElementById('stat-total').textContent = atts.length;
+  document.getElementById('stat-late').textContent = atts.filter(a => a.late).length;
+  const tbody = document.getElementById('attendance-table');
+  tbody.innerHTML = atts.slice().reverse().map(a => `
+    <tr><td>${a.name}</td><td style="text-align:right"><span class="badge ${a.late ? 'badge-late' : 'badge-ontime'}">${a.late ? 'Late' : 'On Time'}</span></td></tr>
+  `).join('');
+}
+
+async function endEvent() {
+  if (!confirm("Close check-in?")) return;
+  await api({ action: 'closeEvent', id: activeEvent.id });
+  activeEvent = null;
+  clearInterval(pollTimer);
+  document.getElementById('active-event-card').style.display = 'none';
+}
+
+// CHECK-IN LOGIC
+async function loadCheckinScreen(id) {
+  const [evRes] = await Promise.all([api({ action: 'getEvent', id }), loadRoster()]);
+  document.getElementById('ci-loading').style.display = 'none';
+  if (!evRes.event || !evRes.event.open) {
+    document.getElementById('ci-closed').style.display = 'block';
+  } else {
+    document.getElementById('ci-evt-name').textContent = evRes.event.name;
+    document.getElementById('ci-form').style.display = 'flex';
+    filterRoster();
+  }
+}
+
+function filterRoster() {
+  const q = document.getElementById('ci-search').value.toLowerCase();
+  const container = document.getElementById('ci-roster');
+  const matches = roster.filter(n => n.toLowerCase().includes(q)).slice(0, 10);
+  container.innerHTML = matches.map(n => `<button onclick="selectMember('${n}')">${n}</button>`).join('');
+}
+
+function selectMember(name) {
+  selectedMember = name;
+  document.getElementById('ci-selected').textContent = name;
+  document.getElementById('ci-selected').style.display = 'block';
+  document.getElementById('ci-submit').disabled = false;
+  document.getElementById('ci-roster').innerHTML = '';
+}
+
+async function submitCheckin() {
+  const btn = document.getElementById('ci-submit');
+  btn.disabled = true;
+  const res = await api({
+    action: 'checkin', eventId: activeCheckinId, name: selectedMember,
+    late: document.getElementById('ci-late').checked,
+    time: new Date().toLocaleTimeString()
+  });
+  if (res.success) {
+    document.getElementById('ci-form').style.display = 'none';
+    document.getElementById('ci-success-name').textContent = selectedMember;
+    document.getElementById('ci-success').style.display = 'block';
+    fireConfetti();
+  } else {
+    alert(res.error || "Error");
+    btn.disabled = false;
+  }
+}
+
+function fireConfetti() {
+  const canvas = document.createElement('canvas');
+  Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 999 });
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  let particles = Array.from({ length: 80 }, () => ({
+    x: Math.random() * canvas.width, y: -20,
+    r: Math.random() * 6 + 4, d: Math.random() * 5 + 2,
+    color: ['#3b6d11', '#185fa5', '#fac775', '#f09595'][Math.floor(Math.random() * 4)],
+    tilt: Math.random() * 10
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      p.y += p.d; p.x += Math.sin(p.tilt);
+    });
+    particles = particles.filter(p => p.y < canvas.height);
+    if (particles.length) requestAnimationFrame(draw);
+    else canvas.remove();
+  }
+  draw();
+}
+
+function copyCheckinLink() { navigator.clipboard.writeText(document.getElementById('checkin-link').value); alert("Link copied!"); }
+
+// ROUTING
+const params = new URLSearchParams(window.location.search);
+if (params.get('checkin')) {
+  activeCheckinId = params.get('checkin');
+  showScreen('checkin');
+  loadCheckinScreen(activeCheckinId);
+}
+</script>
+</body>
+</html>
